@@ -42,7 +42,6 @@
             font-family: 'Vazirmatn', sans-serif;
             background-color: #0A0E17;
             color: #E2E8F0;
-            user-select: none;
         }
         .gold-gradient-text {
             background: linear-gradient(135deg, #FFF099 0%, #D4AF37 50%, #AA820A 100%);
@@ -56,30 +55,9 @@
             background: linear-gradient(135deg, #FFE033 0%, #E5BE2C 100%);
         }
         .glass-panel {
-            background: rgba(19, 27, 46, 0.7);
+            background: rgba(19, 27, 46, 0.75);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(212, 175, 55, 0.15);
-        }
-        .tetalla-coin {
-            background: radial-gradient(circle at 35% 35%, #FFF099 0%, #D4AF37 50%, #856508 100%);
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.35), inset 0 3px 8px rgba(255,255,255,0.8), inset 0 -6px 10px rgba(0,0,0,0.5);
-            transition: transform 0.05s ease-out;
-        }
-        .tetalla-coin:active {
-            transform: scale(0.92) rotate(-2deg);
-        }
-        @keyframes floatUpText {
-            0% { opacity: 1; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-90px) scale(1.4); }
-        }
-        .floating-score {
-            position: absolute;
-            animation: floatUpText 0.75s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-            pointer-events: none;
-            font-weight: 900;
-            color: #FFD700;
-            font-size: 1.25rem;
-            text-shadow: 0 3px 6px rgba(0,0,0,0.9);
         }
     </style>
 </head>
@@ -99,10 +77,9 @@
                 <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-300">
                     <a href="#trade" class="hover:text-gold transition-colors">معامله آنلاین</a>
                     <a href="#wallet" class="hover:text-gold transition-colors flex items-center gap-1.5 text-gold">
-                        <i class="fa-solid fa-wallet text-xs"></i>
-                        کیف پول
+                        <i class="fa-solid fa-wallet text-xs"></i> کیف پول
                     </a>
-                    <a href="#game" class="hover:text-gold transition-colors">استخراج (سبک تتلا)</a>
+                    <a href="#market" class="hover:text-gold transition-colors">بازارها</a>
                     <a href="#history" class="hover:text-gold transition-colors">تاریخچه تراکنش‌ها</a>
                 </nav>
             </div>
@@ -124,7 +101,7 @@
             <div class="flex items-center gap-6 overflow-x-auto no-scrollbar py-1">
                 <div class="flex items-center gap-2 whitespace-nowrap">
                     <span class="text-slate-400">طلای ۱۸ عیار (گرم):</span>
-                    <span id="goldPriceText" class="text-gold font-bold">در حال محاسبه...</span>
+                    <span id="goldPriceText" class="text-gold font-bold">در حال به‌روزرسانی...</span>
                     <span class="text-emerald-400 text-xs">(فرمول زنده) <i class="fa-solid fa-circle-dot animate-pulse"></i></span>
                 </div>
                 <div class="h-4 w-[1px] bg-dark-border"></div>
@@ -148,21 +125,21 @@
         <section id="trade" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div class="lg:col-span-7 space-y-6">
                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold/10 border border-gold/30 text-gold text-xs font-semibold">
-                    <i class="fa-solid fa-shield-halved"></i> فرمول رسمی: (انس جهانی × تتر تومان) ÷ ۳۱.۱۰۳۵ × ۰.۷۵
+                    <i class="fa-solid fa-shield-halved"></i> فرمول استاندارد: (انس جهانی × تتر بازار) ÷ ۳۱.۱۰۳۵ × ۰.۷۵
                 </div>
                 <h1 class="text-3xl sm:text-5xl font-black leading-tight">
-                    معامله و استخراج <span class="gold-gradient-text">طلای آبشده</span>
+                    معامله لحظه‌ای <span class="gold-gradient-text">طلای آبشده</span> بدون کارمزد
                 </h1>
                 <p class="text-slate-400 leading-relaxed text-sm sm:text-base">
-                    در مینی‌اپ استخراج گلدین مانند پلتفرم تتلا با ضربه زدن سوت طلا به دست آورده و مستقیم در کیف پول دارایی‌های خود ذخیره کنید.
+                    پلتفرم هوشمند گلدین با اتصال به بازارهای مالی بین‌المللی و رمزارز، امن‌ترین بستر خرید و فروش طلای آبشده را برای سرمایه‌گذاران فراهم کرده است.
                 </p>
                 <div class="flex flex-wrap gap-4 pt-2">
                     <a href="#wallet" class="px-8 py-3.5 text-base font-bold text-black gold-btn-gradient rounded-xl shadow-lg shadow-gold/20 hover:scale-105 transition-all">
                         مدیریت کیف پول
                     </a>
-                    <a href="#game" class="px-8 py-3.5 text-base font-bold text-slate-200 bg-dark-card border border-dark-border rounded-xl hover:border-gold hover:text-gold transition-all">
-                        <i class="fa-solid fa-gamepad text-gold ml-2"></i>بازی استخراج تتلا
-                    </a>
+                    <button onclick="openAuthModal('register')" class="px-8 py-3.5 text-base font-bold text-slate-200 bg-dark-card border border-dark-border rounded-xl hover:border-gold hover:text-gold transition-all">
+                        افتتاح حساب رایگان
+                    </button>
                 </div>
             </div>
 
@@ -171,7 +148,7 @@
                 <div class="glass-panel p-6 rounded-2xl space-y-5 shadow-2xl">
                     <div class="flex justify-between items-center border-b border-dark-border pb-4">
                         <h3 class="font-bold text-lg text-slate-100">محاسبه‌گر و معامله آنی</h3>
-                        <span class="text-xs text-gold bg-gold/10 px-2.5 py-1 rounded-md border border-gold/20">فرمول هوشمند</span>
+                        <span class="text-xs text-gold bg-gold/10 px-2.5 py-1 rounded-md border border-gold/20">آنلاین</span>
                     </div>
 
                     <div class="space-y-4">
@@ -196,46 +173,11 @@
                             </div>
                         </div>
 
-                        <button onclick="openAuthModal('register')" class="w-full py-3.5 text-sm font-bold text-black gold-btn-gradient rounded-xl shadow-md hover:shadow-gold/20 transition-all">
-                            خرید آنلاین طلا
+                        <button onclick="executeTrade()" class="w-full py-3.5 text-sm font-bold text-black gold-btn-gradient rounded-xl shadow-md hover:shadow-gold/20 transition-all">
+                            خرید آنی طلا با موجودی کیف پول
                         </button>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- TETALLA STYLE CLICKER GAME SECTION -->
-        <section id="game" class="glass-panel p-6 sm:p-10 rounded-3xl border border-gold/30 max-w-2xl mx-auto w-full text-center space-y-6">
-            <div class="space-y-2">
-                <span class="px-3 py-1 bg-gold/10 text-gold text-xs rounded-full border border-gold/30 font-bold">Tetalla Tap-to-Mine Game</span>
-                <h2 class="text-2xl sm:text-4xl font-black gold-gradient-text">معدن استخراج طلا (سبک تتلا)</h2>
-                <p class="text-xs sm:text-sm text-slate-400">روی سکه طلای زیر کلیک کنید تا سوت طلا استخراج کنید!</p>
-            </div>
-
-            <!-- Stats Bar -->
-            <div class="flex justify-between items-center bg-dark-bg/90 p-4 rounded-2xl border border-dark-border">
-                <div class="text-right">
-                    <span class="text-xs text-slate-400 block">طلا استخراج‌شده:</span>
-                    <span id="minedSootText" class="text-2xl font-black text-gold">0.00</span>
-                    <span class="text-xs text-slate-500">سوت</span>
-                </div>
-                <div class="text-left">
-                    <span class="text-xs text-slate-400 block">انرژی باقی‌مانده:</span>
-                    <span id="energyText" class="text-lg font-extrabold text-emerald-400">1000 / 1000</span>
-                </div>
-            </div>
-
-            <!-- Interactive Coin -->
-            <div class="relative flex justify-center items-center py-6" id="coinClickArea" onclick="handleCoinTap(event)">
-                <div class="w-52 h-52 sm:w-64 sm:h-64 rounded-full tetalla-coin flex flex-col items-center justify-center cursor-pointer select-none relative shadow-2xl">
-                    <i class="fa-solid fa-gem text-5xl sm:text-6xl text-amber-950 drop-shadow-md"></i>
-                    <span class="mt-3 font-black text-amber-950 text-sm sm:text-base tracking-widest">TAP TO MINE</span>
-                </div>
-            </div>
-
-            <!-- Energy Progress Bar -->
-            <div class="w-full bg-dark-bg rounded-full h-3 border border-dark-border p-0.5 overflow-hidden">
-                <div id="energyBar" class="bg-gradient-to-r from-amber-500 to-gold h-full rounded-full transition-all duration-150" style="width: 100%;"></div>
             </div>
         </section>
 
@@ -244,14 +186,14 @@
             <div class="flex flex-wrap items-center justify-between gap-4 border-b border-dark-border pb-4">
                 <div>
                     <h2 class="text-2xl sm:text-3xl font-black gold-gradient-text">کیف پول دارایی‌های شما</h2>
-                    <p class="text-xs sm:text-sm text-slate-400 mt-1">موجودی‌های تفکیک‌شده و واریز/برداشت آسان</p>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-1">مدیریت حساب و موجودی واقعی بر اساس واریزهای تومانی و تتری</p>
                 </div>
                 <div class="flex gap-3">
                     <button onclick="openDepositModal()" class="px-5 py-2.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold text-xs sm:text-sm rounded-xl hover:bg-emerald-500 hover:text-black transition-all">
-                        <i class="fa-solid fa-arrow-down-left ml-1"></i> واریز به کیف پول
+                        <i class="fa-solid fa-arrow-down-left ml-1"></i> واریز وجه
                     </button>
                     <button onclick="openWithdrawModal()" class="px-5 py-2.5 bg-gold/10 border border-gold/30 text-gold font-bold text-xs sm:text-sm rounded-xl hover:bg-gold hover:text-black transition-all">
-                        <i class="fa-solid fa-arrow-up-right ml-1"></i> درخواست برداشت
+                        <i class="fa-solid fa-arrow-up-right ml-1"></i> برداشت وجه
                     </button>
                 </div>
             </div>
@@ -260,9 +202,9 @@
                 <div class="glass-panel p-6 rounded-2xl border border-gold/40 relative overflow-hidden">
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <span class="text-xs text-slate-400 block mb-1">موجودی طلای ۱۸ عیار</span>
-                            <h3 class="text-2xl font-black text-gold" id="walletGoldGram">۲.۴۵۰ گرم</h3>
-                            <span class="text-xs text-slate-500" id="walletGoldSoot">معادل ۲,۴۵۰ سوت</span>
+                            <span class="text-xs text-slate-400 block mb-1">موجودی طلای آبشده</span>
+                            <h3 class="text-2xl font-black text-gold" id="walletGoldGram">0.000 گرم</h3>
+                            <span class="text-xs text-slate-500" id="walletGoldSoot">معادل ۰ سوت</span>
                         </div>
                         <div class="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-gold text-xl">
                             <i class="fa-solid fa-coins"></i>
@@ -277,17 +219,17 @@
                 <div class="glass-panel p-6 rounded-2xl border border-dark-border relative overflow-hidden">
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <span class="text-xs text-slate-400 block mb-1">موجودی تومانی</span>
-                            <h3 class="text-2xl font-black text-slate-100" id="walletToman">۱۵,۲۰۰,۰۰۰ تومان</h3>
-                            <span class="text-xs text-emerald-400">آماده معامله</span>
+                            <span class="text-xs text-slate-400 block mb-1">موجودی تومانی (ریالی)</span>
+                            <h3 class="text-2xl font-black text-slate-100" id="walletToman">۰ تومان</h3>
+                            <span class="text-xs text-emerald-400">کیف پول فعال</span>
                         </div>
                         <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-xl">
                             <i class="fa-solid fa-money-bill-wave"></i>
                         </div>
                     </div>
                     <div class="border-t border-dark-border pt-3 flex justify-between items-center text-xs text-slate-400">
-                        <span>کارت متصل:</span>
-                        <span class="font-bold text-slate-200" dir="ltr">۶۰۳۷ **** ۱۲۳۴</span>
+                        <span>وضعیت حساب:</span>
+                        <span class="font-bold text-emerald-400">تایید هویت شده</span>
                     </div>
                 </div>
 
@@ -295,7 +237,7 @@
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <span class="text-xs text-slate-400 block mb-1">موجودی تتر (USDT)</span>
-                            <h3 class="text-2xl font-black text-emerald-400" id="walletUsdt">۴۵۰.۰۰ USDT</h3>
+                            <h3 class="text-2xl font-black text-emerald-400" id="walletUsdt">0.00 USDT</h3>
                             <span class="text-xs text-slate-500">شبکه TRC-20</span>
                         </div>
                         <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-xl">
@@ -314,10 +256,10 @@
         <section id="history" class="space-y-6">
             <div class="flex items-center justify-between border-b border-dark-border pb-4">
                 <div>
-                    <h2 class="text-xl sm:text-2xl font-black text-slate-100">تاریخچه تراکنش‌های اخیر</h2>
-                    <p class="text-xs text-slate-400 mt-1">گزارش شفاف خریدهای طلا، واریزها و پاداش استخراج</p>
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-100">تاریخچه تراکنش‌های مالی</h2>
+                    <p class="text-xs text-slate-400 mt-1">گزارش شفاف واریزها، برداشت‌ها و معاملات طلا</p>
                 </div>
-                <span class="text-xs text-gold bg-gold/10 px-3 py-1 rounded-full border border-gold/20">آخرین تراکنش‌ها</span>
+                <span class="text-xs text-gold bg-gold/10 px-3 py-1 rounded-full border border-gold/20">ثبت رسمی</span>
             </div>
 
             <div class="glass-panel rounded-2xl overflow-x-auto border border-dark-border">
@@ -333,19 +275,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-dark-border text-slate-200" id="transactionTableBody">
-                        <tr class="hover:bg-dark-hover transition-colors">
-                            <td class="p-4 font-bold text-gold flex items-center gap-2">
-                                <span class="w-7 h-7 rounded-lg bg-gold/10 flex items-center justify-center text-xs"><i class="fa-solid fa-cart-shopping"></i></span>
-                                خرید طلای آبشده
-                            </td>
-                            <td class="p-4 font-semibold">۱.۰۰۰ گرم</td>
-                            <td class="p-4">۴,۳۵۰,۰۰۰ تومان</td>
-                            <td class="p-4 text-slate-400 text-xs">۱۴۰۳/۰۸/۲۰ - ۱۴:۳۰</td>
-                            <td class="p-4 text-slate-400 text-xs dir-ltr text-right">GLD-984321</td>
-                            <td class="p-4 text-center">
-                                <span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 rounded-full text-xs font-bold border border-emerald-500/20">موفق</span>
-                            </td>
-                        </tr>
+                        <!-- Dynamic rows will be inserted here -->
                     </tbody>
                 </table>
             </div>
@@ -367,22 +297,22 @@
             <button onclick="closeDepositModal()" class="absolute top-4 left-4 text-slate-400 hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <h3 class="text-xl font-bold gold-gradient-text mb-4 text-center">واریز به کیف پول</h3>
+            <h3 class="text-xl font-bold gold-gradient-text mb-4 text-center">واریز وجه به کیف پول</h3>
             
             <form onsubmit="handleDepositSubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">نوع دارایی واریزی:</label>
+                    <label class="block text-xs text-slate-400 mb-1">نوع دارایی:</label>
                     <select id="depositType" class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-gold outline-none">
-                        <option value="toman">تومان (درگاه پرداخت شتابی)</option>
+                        <option value="toman">تومان (درگاه مستقیم بانکی)</option>
                         <option value="usdt">تتر - USDT (شبکه TRC-20)</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">مبلغ / مقدار واریزی:</label>
-                    <input type="number" id="depositAmount" required placeholder="مثال: ۵۰۰۰۰۰۰" class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-gold outline-none">
+                    <label class="block text-xs text-slate-400 mb-1">مبلغ واریزی:</label>
+                    <input type="number" id="depositAmount" required placeholder="مثال: ۱۰,۰۰۰,۰۰۰" class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-gold outline-none">
                 </div>
                 <button type="submit" class="w-full py-3 text-sm font-bold text-black gold-btn-gradient rounded-xl shadow-md hover:shadow-gold/20 transition-all">
-                    انتقال به درگاه پرداخت
+                    تایید و انتقال به درگاه
                 </button>
             </form>
         </div>
@@ -394,33 +324,32 @@
             <button onclick="closeWithdrawModal()" class="absolute top-4 left-4 text-slate-400 hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <h3 class="text-xl font-bold gold-gradient-text mb-4 text-center">درخواست برداشت دارایی</h3>
+            <h3 class="text-xl font-bold gold-gradient-text mb-4 text-center">درخواست برداشت وجه</h3>
             
             <form onsubmit="handleWithdrawSubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">انتخاب دارایی جهت برداشت:</label>
+                    <label class="block text-xs text-slate-400 mb-1">نوع دارایی جهت برداشت:</label>
                     <select id="withdrawType" class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-gold outline-none">
-                        <option value="gold_physical">طلای ۱۸ عیار (تحویل شمش فیزیکی)</option>
-                        <option value="toman">تومان (واریز پایا/ساتنا به حساب بانکی)</option>
+                        <option value="toman">تومان (انتقال پایا / ساتنا به حساب بانکی)</option>
                         <option value="usdt">تتر (انتقال به کیف پول ارز دیجیتال)</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">مقدار برداشت:</label>
-                    <input type="number" step="any" id="withdrawAmount" required placeholder="وزن یا مبلغ مورد نظر" class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-gold outline-none">
+                    <input type="number" step="any" id="withdrawAmount" required placeholder="مبلغ مورد نظر" class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-gold outline-none">
                 </div>
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">شماره شبای بانکی / آدرس کیف پول:</label>
-                    <input type="text" required placeholder="IR000000000000000000000000 یا آدرس USDT" class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-gold outline-none text-left dir-ltr">
+                    <label class="block text-xs text-slate-400 mb-1">شماره شبا یا آدرس ولت مقصد:</label>
+                    <input type="text" id="withdrawDestination" required placeholder="IR000000000000000000000000 یا آدرس تتر" class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-gold outline-none text-left dir-ltr">
                 </div>
                 <button type="submit" class="w-full py-3 text-sm font-bold text-black gold-btn-gradient rounded-xl shadow-md hover:shadow-gold/20 transition-all">
-                    ثبت درخواست برداشت
+                    ثبت نهایی درخواست
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- AUTHENTICATION MODAL -->
+    <!-- AUTHENTICATION MODAL (LOGIN & REGISTER) -->
     <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="glass-panel w-full max-w-md rounded-2xl p-6 sm:p-8 relative border border-gold/30 shadow-2xl">
             <button onclick="closeAuthModal()" class="absolute top-5 left-5 text-slate-400 hover:text-white transition-colors">
@@ -437,10 +366,12 @@
                 </button>
             </div>
 
+            <div id="authAlert" class="hidden p-3 rounded-xl mb-4 text-xs font-bold flex items-center gap-2"></div>
+
             <form onsubmit="handleAuthSubmit(event)" class="space-y-4">
                 <div id="fullNameGroup" class="hidden">
                     <label class="block text-xs text-slate-400 mb-1.5">نام و نام خانوادگی:</label>
-                    <input type="text" id="fullNameInput" placeholder="مثال: علی حسینی" class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-gold">
+                    <input type="text" id="fullNameInput" placeholder="مثال: علی رضایی" class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-gold">
                 </div>
 
                 <div>
@@ -465,212 +396,22 @@
         </div>
     </div>
 
-    <!-- Core JavaScript & Market Formula -->
+    <!-- JavaScript Application Core -->
     <script>
-        let globalGoldOunceUSD = 2685.50; 
-        let usdtPriceToman = 68500;
-        let goldPriceGram = 4350000;
+        let globalGoldOunceUSD = 2695.50; 
+        let usdtPriceToman = 69500;
+        let goldPriceGram = 0;
         let activeAuthTab = 'login';
+        let currentUser = JSON.parse(localStorage.getItem('goldin_user')) || null;
 
-        let userWallet = {
-            goldGram: 2.450,
-            toman: 15200000,
-            usdt: 450.00
+        let userWallet = JSON.parse(localStorage.getItem('goldin_wallet')) || {
+            goldGram: 0.000,
+            toman: 0,
+            usdt: 0.00
         };
 
-        // TETALLA GAME STATE
-        let minedSoot = 0.00;
-        let energy = 1000;
-        const maxEnergy = 1000;
-        const tapPower = 0.05; // 0.05 soot per tap
+        let transactions = JSON.parse(localStorage.getItem('goldin_txs')) || [];
 
         async function fetchMarketData() {
             try {
-                const resUsdt = await fetch('https://api.nobitex.ir/market/stats?srcCurrency=usdt&dstCurrency=rls');
-                const dataUsdt = await resUsdt.json();
-                if (dataUsdt && dataUsdt.stats && dataUsdt.stats['usdt-rls']) {
-                    const priceRials = parseFloat(dataUsdt.stats['usdt-rls'].latest);
-                    if (priceRials > 0) usdtPriceToman = Math.round(priceRials / 10);
-                }
-            } catch (e) {
-                usdtPriceToman = 68500;
-            }
-
-            try {
-                const resGold = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pax-gold&vs_currencies=usd');
-                const dataGold = await resGold.json();
-                if (dataGold && dataGold['pax-gold'] && dataGold['pax-gold'].usd) {
-                    globalGoldOunceUSD = dataGold['pax-gold'].usd;
-                }
-            } catch (e) {
-                globalGoldOunceUSD = 2685.50;
-            }
-
-            updatePricesAndCalculation();
-        }
-
-        function updatePricesAndCalculation() {
-            const gram24k = (globalGoldOunceUSD * usdtPriceToman) / 31.1034768;
-            goldPriceGram = Math.round(gram24k * 0.75);
-
-            document.getElementById('globalGoldText').innerText = '$' + globalGoldOunceUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            document.getElementById('usdtPriceText').innerText = usdtPriceToman.toLocaleString('fa-IR') + ' تومان';
-            document.getElementById('goldPriceText').innerText = goldPriceGram.toLocaleString('fa-IR') + ' تومان';
-
-            calculateTrade();
-            updateWalletUI();
-        }
-
-        function calculateTrade() {
-            const grams = parseFloat(document.getElementById('goldInput').value) || 0;
-            const totalToman = grams * goldPriceGram;
-            const totalUsdt = usdtPriceToman > 0 ? (totalToman / usdtPriceToman) : 0;
-
-            document.getElementById('tomanOutput').innerText = totalToman.toLocaleString('fa-IR');
-            document.getElementById('usdtOutput').innerText = totalUsdt.toFixed(2);
-        }
-
-        function updateWalletUI() {
-            document.getElementById('walletGoldGram').innerText = userWallet.goldGram.toFixed(3) + ' گرم';
-            document.getElementById('walletGoldSoot').innerText = `معادل ${(userWallet.goldGram * 1000).toLocaleString('fa-IR')} سوت`;
-            
-            const goldValToman = userWallet.goldGram * goldPriceGram;
-            document.getElementById('walletGoldTomanValue').innerText = Math.round(goldValToman).toLocaleString('fa-IR') + ' تومان';
-
-            document.getElementById('walletToman').innerText = userWallet.toman.toLocaleString('fa-IR') + ' تومان';
-            document.getElementById('walletUsdt').innerText = userWallet.usdt.toFixed(2) + ' USDT';
-
-            const usdtValToman = userWallet.usdt * usdtPriceToman;
-            document.getElementById('walletUsdtTomanValue').innerText = Math.round(usdtValToman).toLocaleString('fa-IR') + ' تومان';
-        }
-
-        // TETALLA GAME TAP LOGIC
-        function handleCoinTap(event) {
-            if (energy <= 0) return;
-
-            energy -= 1;
-            minedSoot += tapPower;
-            userWallet.goldGram += (tapPower / 1000);
-
-            document.getElementById('minedSootText').innerText = minedSoot.toFixed(2);
-            document.getElementById('energyText').innerText = `${energy} / ${maxEnergy}`;
-            document.getElementById('energyBar').style.width = `${(energy / maxEnergy) * 100}%`;
-
-            updateWalletUI();
-
-            // Floating point animation
-            const rect = event.currentTarget.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-
-            const floatEl = document.createElement('div');
-            floatEl.className = 'floating-score';
-            floatEl.innerText = `+${tapPower}`;
-            floatEl.style.left = `${x}px`;
-            floatEl.style.top = `${y}px`;
-
-            document.getElementById('coinClickArea').appendChild(floatEl);
-            setTimeout(() => floatEl.remove(), 750);
-        }
-
-        // Energy Recovery System
-        setInterval(() => {
-            if (energy < maxEnergy) {
-                energy = Math.min(maxEnergy, energy + 4);
-                document.getElementById('energyText').innerText = `${energy} / ${maxEnergy}`;
-                document.getElementById('energyBar').style.width = `${(energy / maxEnergy) * 100}%`;
-            }
-        }, 1000);
-
-        // DEPOSIT & WITHDRAW MODALS
-        function openDepositModal() { document.getElementById('depositModal').classList.remove('hidden'); }
-        function closeDepositModal() { document.getElementById('depositModal').classList.add('hidden'); }
-
-        function openWithdrawModal() { document.getElementById('withdrawModal').classList.remove('hidden'); }
-        function closeWithdrawModal() { document.getElementById('withdrawModal').classList.add('hidden'); }
-
-        function handleDepositSubmit(e) {
-            e.preventDefault();
-            const type = document.getElementById('depositType').value;
-            const amount = parseFloat(document.getElementById('depositAmount').value) || 0;
-
-            if (type === 'toman') {
-                userWallet.toman += amount;
-                addTransactionRow('واریز تومانی شتابی', '-', `+${amount.toLocaleString('fa-IR')} تومان`, 'موفق');
-            } else {
-                userWallet.usdt += amount;
-                addTransactionRow('شارژ تتر (USDT)', `${amount} USDT`, '-', 'موفق');
-            }
-
-            updateWalletUI();
-            closeDepositModal();
-            alert('واریز با موفقیت ثبت شد.');
-        }
-
-        function handleWithdrawSubmit(e) {
-            e.preventDefault();
-            const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
-            addTransactionRow('درخواست برداشت', `${amount}`, '-', 'در حال بررسی');
-            closeWithdrawModal();
-            alert('درخواست برداشت با موفقیت ثبت شد.');
-        }
-
-        function addTransactionRow(typeText, amountText, priceText, statusText) {
-            const tbody = document.getElementById('transactionTableBody');
-            const now = new Date().toLocaleDateString('fa-IR') + ' - ' + new Date().toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit'});
-            const randomCode = 'TX-' + Math.floor(100000 + Math.random() * 900000);
-
-            const tr = document.createElement('tr');
-            tr.className = "hover:bg-dark-hover transition-colors";
-            tr.innerHTML = `
-                <td class="p-4 font-bold text-gold">${typeText}</td>
-                <td class="p-4 font-semibold">${amountText}</td>
-                <td class="p-4">${priceText}</td>
-                <td class="p-4 text-slate-400 text-xs">${now}</td>
-                <td class="p-4 text-slate-400 text-xs dir-ltr text-right">${randomCode}</td>
-                <td class="p-4 text-center">
-                    <span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 rounded-full text-xs font-bold border border-emerald-500/20">${statusText}</span>
-                </td>
-            `;
-            tbody.insertBefore(tr, tbody.firstChild);
-        }
-
-        // AUTH MODAL LOGIC
-        function openAuthModal(mode) {
-            document.getElementById('authModal').classList.remove('hidden');
-            switchTab(mode);
-        }
-        function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
-
-        function switchTab(tab) {
-            activeAuthTab = tab;
-            const tabLoginBtn = document.getElementById('tabLoginBtn');
-            const tabRegisterBtn = document.getElementById('tabRegisterBtn');
-            const fullNameGroup = document.getElementById('fullNameGroup');
-            const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
-
-            if (tab === 'register') {
-                tabRegisterBtn.className = "text-lg font-black pb-2 border-b-2 border-gold text-gold transition-all";
-                tabLoginBtn.className = "text-lg font-bold pb-2 text-slate-400 hover:text-slate-200 transition-all";
-                fullNameGroup.classList.remove('hidden');
-                confirmPasswordGroup.classList.remove('hidden');
-            } else {
-                tabLoginBtn.className = "text-lg font-black pb-2 border-b-2 border-gold text-gold transition-all";
-                tabRegisterBtn.className = "text-lg font-bold pb-2 text-slate-400 hover:text-slate-200 transition-all";
-                fullNameGroup.classList.add('hidden');
-                confirmPasswordGroup.classList.add('hidden');
-            }
-        }
-
-        function handleAuthSubmit(e) {
-            e.preventDefault();
-            closeAuthModal();
-            alert('ورود / ثبت نام با موفقیت انجام شد.');
-        }
-
-        // Startup execution
-        updatePricesAndCalculation();
-        fetchMarketData();
-    </script>
-</body>
-</html>
+                const resUsdt = await fetch('
