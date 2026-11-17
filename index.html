@@ -414,4 +414,270 @@
 
         async function fetchMarketData() {
             try {
-                const resUsdt = await fetch('
+                const resUsdt = await fetch('https://api.nobitex.ir/market/stats?srcCurrency=usdt&dstCurrency=rls');
+                const dataUsdt = await resUsdt.json();
+                if (dataUsdt && dataUsdt.stats && dataUsdt.stats['usdt-rls']) {
+                    const priceRials = parseFloat(dataUsdt.stats['usdt-rls'].latest);
+                    if (priceRials > 0) usdtPriceToman = Math.round(priceRials / 10);
+                }
+            } catch (e) {
+                usdtPriceToman = 69500;
+            }
+
+            try {
+                const resGold = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pax-gold&vs_currencies=usd');
+                const dataGold = await resGold.json();
+                if (dataGold && dataGold['pax-gold'] && dataGold['pax-gold'].usd) {
+                    globalGoldOunceUSD = dataGold['pax-gold'].usd;
+                }
+            } catch (e) {
+                globalGoldOunceUSD = 2695.50;
+            }
+
+            updatePricesAndCalculation();
+        }
+
+        function updatePricesAndCalculation() {
+            const gram24k = (globalGoldOunceUSD * usdtPriceToman) / 31.1034768;
+            goldPriceGram = Math.round(gram24k * 0.75);
+
+            document.getElementById('globalGoldText').innerText = '$' + globalGoldOunceUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('usdtPriceText').innerText = usdtPriceToman.toLocaleString('fa-IR') + ' تومان';
+            document.getElementById('goldPriceText').innerText = goldPriceGram.toLocaleString('fa-IR') + ' تومان';
+
+            calculateTrade();
+            updateWalletUI();
+        }
+
+        function calculateTrade() {
+            const grams = parseFloat(document.getElementById('goldInput').value) || 0;
+            const totalToman = grams * goldPriceGram;
+            const totalUsdt = usdtPriceToman > 0 ? (totalToman / usdtPriceToman) : 0;
+
+            document.getElementById('tomanOutput').innerText = totalToman.toLocaleString('fa-IR');
+            document.getElementById('usdtOutput').innerText = totalUsdt.toFixed(2);
+        }
+
+        function updateWalletUI() {
+            document.getElementById('walletGoldGram').innerText = userWallet.goldGram.toFixed(3) + ' گرم';
+            document.getElementById('walletGoldSoot').innerText = `معادل ${(userWallet.goldGram * 1000).toLocaleString('fa-IR')} سوت`;
+            
+            const goldValToman = userWallet.goldGram * goldPriceGram;
+            document.getElementById('walletGoldTomanValue').innerText = Math.round(goldValToman).toLocaleString('fa-IR') + ' تومان';
+
+            document.getElementById('walletToman').innerText = userWallet.toman.toLocaleString('fa-IR') + ' تومان';
+            document.getElementById('walletUsdt').innerText = userWallet.usdt.toFixed(2) + ' USDT';
+
+            const usdtValToman = userWallet.usdt * usdtPriceToman;
+            document.getElementById('walletUsdtTomanValue').innerText = Math.round(usdtValToman).toLocaleString('fa-IR') + ' تومان';
+
+            localStorage.setItem('goldin_wallet', JSON.stringify(userWallet));
+        }
+
+        function executeTrade() {
+            if (!currentUser) {
+                openAuthModal('login');
+                return;
+            }
+            const grams = parseFloat(document.getElementById('goldInput').value) || 0;
+            if (grams <= 0) {
+                alert('لطفاً مقدار معتبری برای خرید طلا وارد کنید.');
+                return;
+            }
+            const costToman = grams * goldPriceGram;
+            if (userWallet.toman < costToman) {
+                alert('موجودی تومانی کیف پول شما کافی نیست. لطفاً حساب خود را شارژ کنید.');
+                openDepositModal();
+                return;
+            }
+
+            userWallet.toman -= costToman;
+            userWallet.goldGram += grams;
+            
+            addTransactionRow('خرید طلای آبشده', `${grams.toFixed(3)} گرم`, `${costToman.toLocaleString('fa-IR')} تومان`, 'موفق');
+            updateWalletUI();
+            alert(`خرید ${grams.toFixed(3)} گرم طلای آبشده با موفقیت انجام شد.`);
+        }
+
+        // DEPOSIT & WITHDRAW
+        function openDepositModal() { document.getElementById('depositModal').classList.remove('hidden'); }
+        function closeDepositModal() { document.getElementById('depositModal').classList.add('hidden'); }
+
+        function openWithdrawModal() { document.getElementById('withdrawModal').classList.remove('hidden'); }
+        function closeWithdrawModal() { document.getElementById('withdrawModal').classList.add('hidden'); }
+
+        function handleDepositSubmit(e) {
+            e.preventDefault();
+            if (!currentUser) { openAuthModal('login'); return; }
+
+            const type = document.getElementById('depositType').value;
+            const amount = parseFloat(document.getElementById('depositAmount').value) || 0;
+            if (amount <= 0) return;
+
+            if (type === 'toman') {
+                userWallet.toman += amount;
+                addTransactionRow('واریز تومانی', '-', `+${amount.toLocaleString('fa-IR')} تومان`, 'موفق');
+            } else {
+                userWallet.usdt += amount;
+                addTransactionRow('شارژ تتر (USDT)', `${amount} USDT`, '-', 'موفق');
+            }
+
+            updateWalletUI();
+            closeDepositModal();
+            alert('واریز وجه با موفقیت انجام شد و موجودی به‌روز گردید.');
+        }
+
+        function handleWithdrawSubmit(e) {
+            e.preventDefault();
+            if (!currentUser) { openAuthModal('login'); return; }
+
+            const type = document.getElementById('withdrawType').value;
+            const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
+            if (amount <= 0) return;
+
+            if (type === 'toman') {
+                if (userWallet.toman < amount) { alert('موجودی تومانی کافی نیست.'); return; }
+                userWallet.toman -= amount;
+                addTransactionRow('برداشت تومان', '-', `-${amount.toLocaleString('fa-IR')} تومان`, 'در انتظار پایا');
+            } else {
+                if (userWallet.usdt < amount) { alert('موجودی تتر کافی نیست.'); return; }
+                userWallet.usdt -= amount;
+                addTransactionRow('برداشت تتر', `${amount} USDT`, '-', 'در انتظار شبکه');
+            }
+
+            updateWalletUI();
+            closeWithdrawModal();
+            alert('درخواست برداشت ثبت شد.');
+        }
+
+        function addTransactionRow(typeText, amountText, priceText, statusText) {
+            const now = new Date().toLocaleDateString('fa-IR') + ' - ' + new Date().toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit'});
+            const randomCode = 'GLD-' + Math.floor(100000 + Math.random() * 900000);
+
+            const tx = { typeText, amountText, priceText, now, randomCode, statusText };
+            transactions.unshift(tx);
+            if (transactions.length > 20) transactions.pop();
+            localStorage.setItem('goldin_txs', JSON.stringify(transactions));
+            renderTransactions();
+        }
+
+        function renderTransactions() {
+            const tbody = document.getElementById('transactionTableBody');
+            tbody.innerHTML = '';
+            if (transactions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">هنوز تراکنشی ثبت نشده است.</td></tr>`;
+                return;
+            }
+            transactions.forEach(tx => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-dark-hover transition-colors";
+                tr.innerHTML = `
+                    <td class="p-4 font-bold text-gold">${tx.typeText}</td>
+                    <td class="p-4 font-semibold">${tx.amountText}</td>
+                    <td class="p-4">${tx.priceText}</td>
+                    <td class="p-4 text-slate-400 text-xs">${tx.now}</td>
+                    <td class="p-4 text-slate-400 text-xs dir-ltr text-right">${tx.randomCode}</td>
+                    <td class="p-4 text-center">
+                        <span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 rounded-full text-xs font-bold border border-emerald-500/20">${tx.statusText}</span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // AUTH SYSTEM
+        function openAuthModal(mode) {
+            document.getElementById('authModal').classList.remove('hidden');
+            switchTab(mode);
+        }
+        function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
+
+        function switchTab(tab) {
+            activeAuthTab = tab;
+            const tabLoginBtn = document.getElementById('tabLoginBtn');
+            const tabRegisterBtn = document.getElementById('tabRegisterBtn');
+            const fullNameGroup = document.getElementById('fullNameGroup');
+            const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+            const authSubmitBtn = document.getElementById('authSubmitBtn');
+
+            if (tab === 'register') {
+                tabRegisterBtn.className = "text-lg font-black pb-2 border-b-2 border-gold text-gold transition-all";
+                tabLoginBtn.className = "text-lg font-bold pb-2 text-slate-400 hover:text-slate-200 transition-all";
+                fullNameGroup.classList.remove('hidden');
+                confirmPasswordGroup.classList.remove('hidden');
+                authSubmitBtn.innerText = "ثبت‌نام در گلدین";
+            } else {
+                tabLoginBtn.className = "text-lg font-black pb-2 border-b-2 border-gold text-gold transition-all";
+                tabRegisterBtn.className = "text-lg font-bold pb-2 text-slate-400 hover:text-slate-200 transition-all";
+                fullNameGroup.classList.add('hidden');
+                confirmPasswordGroup.classList.add('hidden');
+                authSubmitBtn.innerText = "ورود به حساب کاربری";
+            }
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const phone = document.getElementById('phoneInput').value.trim();
+            const password = document.getElementById('passwordInput').value.trim();
+
+            if (!/^09\d{9}$/.test(phone)) {
+                alert('لطفاً شماره همراه معتبر ۱۱ رقمی وارد کنید.');
+                return;
+            }
+            if (password.length < 6) {
+                alert('رمز عبور باید حداقل ۶ کاراکتر باشد.');
+                return;
+            }
+
+            if (activeAuthTab === 'register') {
+                const name = document.getElementById('fullNameInput').value.trim();
+                const confirmPass = document.getElementById('confirmPasswordInput').value.trim();
+                if (!name) { alert('نام و نام خانوادگی الزامی است.'); return; }
+                if (password !== confirmPass) { alert('رمز عبور و تکرار آن مطابقت ندارند.'); return; }
+
+                currentUser = { name, phone };
+            } else {
+                currentUser = { name: 'کاربر گلدین', phone };
+            }
+
+            localStorage.setItem('goldin_user', JSON.stringify(currentUser));
+            updateHeaderUser();
+            closeAuthModal();
+            alert('عملیات با موفقیت انجام شد.');
+        }
+
+        function updateHeaderUser() {
+            const headerArea = document.getElementById('headerAuthArea');
+            if (currentUser) {
+                headerArea.innerHTML = `
+                    <div class="flex items-center gap-3 bg-dark-card border border-gold/30 px-4 py-2 rounded-xl">
+                        <i class="fa-solid fa-user-check text-gold"></i>
+                        <span class="text-xs sm:text-sm font-bold text-slate-200">${currentUser.name}</span>
+                        <button onclick="logout()" class="text-slate-400 hover:text-rose-400 text-xs mr-2" title="خروج">
+                            <i class="fa-solid fa-power-off"></i>
+                        </button>
+                    </div>
+                `;
+            } else {
+                headerArea.innerHTML = `
+                    <button onclick="openAuthModal('login')" class="px-4 py-2 text-sm font-semibold text-slate-200 hover:text-gold transition-colors">ورود</button>
+                    <button onclick="openAuthModal('register')" class="px-5 py-2.5 text-sm font-bold text-black gold-btn-gradient rounded-xl shadow-md hover:shadow-gold/20 transition-all">ثبت نام</button>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('goldin_user');
+            currentUser = null;
+            updateHeaderUser();
+            alert('از حساب کاربری خارج شدید.');
+        }
+
+        // Initialization
+        updateHeaderUser();
+        renderTransactions();
+        updatePricesAndCalculation();
+        fetchMarketData();
+    </script>
+</body>
+</html>
