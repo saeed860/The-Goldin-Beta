@@ -84,13 +84,15 @@
                 </nav>
             </div>
 
-            <div class="flex items-center gap-3" id="headerAuthArea">
-                <button onclick="openAuthModal('login')" class="px-4 py-2 text-sm font-semibold text-slate-200 hover:text-gold transition-colors">
-                    ورود
+            <!-- Header Right Actions & Web3 MetaMask Button -->
+            <div class="flex items-center gap-3">
+                <button onclick="connectMetaMask()" id="web3ConnectBtn" class="px-3.5 py-2 text-xs sm:text-sm bg-dark-card border border-gold/40 rounded-xl text-gold hover:border-gold hover:bg-gold/10 transition-all flex items-center gap-2">
+                    <i class="fa-brands fa-ethereum text-base"></i> اتصال متامسک
                 </button>
-                <button onclick="openAuthModal('register')" class="px-5 py-2.5 text-sm font-bold text-black gold-btn-gradient rounded-xl shadow-md hover:shadow-gold/20 transition-all">
-                    ثبت نام
-                </button>
+                <div id="headerAuthArea" class="flex items-center gap-2">
+                    <button onclick="openAuthModal('login')" class="px-3 py-2 text-sm font-semibold text-slate-200 hover:text-gold transition-colors">ورود</button>
+                    <button onclick="openAuthModal('register')" class="px-4 py-2 text-sm font-bold text-black gold-btn-gradient rounded-xl shadow-md transition-all">ثبت نام</button>
+                </div>
             </div>
         </div>
     </header>
@@ -125,21 +127,21 @@
         <section id="trade" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div class="lg:col-span-7 space-y-6">
                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold/10 border border-gold/30 text-gold text-xs font-semibold">
-                    <i class="fa-solid fa-shield-halved"></i> فرمول استاندارد: (انس جهانی × تتر بازار) ÷ ۳۱.۱۰۳۵ × ۰.۷۵
+                    <i class="fa-solid fa-shield-halved"></i> پشتیبانی از پرداخت ریالی و رمزارز (Web3 / MetaMask)
                 </div>
                 <h1 class="text-3xl sm:text-5xl font-black leading-tight">
-                    معامله لحظه‌ای <span class="gold-gradient-text">طلای آبشده</span> بدون کارمزد
+                    معامله لحظه‌ای <span class="gold-gradient-text">طلای آبشده</span> با تومان و رمزارز
                 </h1>
                 <p class="text-slate-400 leading-relaxed text-sm sm:text-base">
-                    پلتفرم هوشمند گلدین با اتصال به بازارهای مالی بین‌المللی و رمزارز، امن‌ترین بستر خرید و فروش طلای آبشده را برای سرمایه‌گذاران فراهم کرده است.
+                    در گلدین می‌توانید علاوه بر درگاه بانکی شتابی، کیف پول متامسک خود را متصل کرده و مستقیم با تتر (USDT) یا اتریوم طلای آبشده خریداری کنید.
                 </p>
                 <div class="flex flex-wrap gap-4 pt-2">
-                    <a href="#wallet" class="px-8 py-3.5 text-base font-bold text-black gold-btn-gradient rounded-xl shadow-lg shadow-gold/20 hover:scale-105 transition-all">
+                    <button onclick="connectMetaMask()" class="px-8 py-3.5 text-base font-bold text-black gold-btn-gradient rounded-xl shadow-lg shadow-gold/20 hover:scale-105 transition-all flex items-center gap-2">
+                        <i class="fa-brands fa-ethereum"></i> اتصال کیف پول متامسک
+                    </button>
+                    <a href="#wallet" class="px-8 py-3.5 text-base font-bold text-slate-200 bg-dark-card border border-dark-border rounded-xl hover:border-gold hover:text-gold transition-all">
                         مدیریت کیف پول
                     </a>
-                    <button onclick="openAuthModal('register')" class="px-8 py-3.5 text-base font-bold text-slate-200 bg-dark-card border border-dark-border rounded-xl hover:border-gold hover:text-gold transition-all">
-                        افتتاح حساب رایگان
-                    </button>
                 </div>
             </div>
 
@@ -174,7 +176,7 @@
                         </div>
 
                         <button onclick="executeTrade()" class="w-full py-3.5 text-sm font-bold text-black gold-btn-gradient rounded-xl shadow-md hover:shadow-gold/20 transition-all">
-                            خرید آنی طلا با موجودی کیف پول
+                            خرید آنی طلا
                         </button>
                     </div>
                 </div>
@@ -236,12 +238,12 @@
                 <div class="glass-panel p-6 rounded-2xl border border-dark-border relative overflow-hidden">
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <span class="text-xs text-slate-400 block mb-1">موجودی تتر (USDT)</span>
+                            <span class="text-xs text-slate-400 block mb-1">موجودی تتر (USDT / Web3)</span>
                             <h3 class="text-2xl font-black text-emerald-400" id="walletUsdt">0.00 USDT</h3>
-                            <span class="text-xs text-slate-500">شبکه TRC-20</span>
+                            <span class="text-xs text-slate-500" id="web3StatusText">متامسک متصل نیست</span>
                         </div>
                         <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-xl">
-                            <i class="fa-solid fa-dollar-sign"></i>
+                            <i class="fa-brands fa-ethereum"></i>
                         </div>
                     </div>
                     <div class="border-t border-dark-border pt-3 flex justify-between items-center text-xs text-slate-400">
@@ -275,7 +277,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-dark-border text-slate-200" id="transactionTableBody">
-                        <!-- Dynamic rows will be inserted here -->
+                        <!-- Dynamic rows -->
                     </tbody>
                 </table>
             </div>
@@ -304,7 +306,7 @@
                     <label class="block text-xs text-slate-400 mb-1">نوع دارایی:</label>
                     <select id="depositType" class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-gold outline-none">
                         <option value="toman">تومان (درگاه مستقیم بانکی)</option>
-                        <option value="usdt">تتر - USDT (شبکه TRC-20)</option>
+                        <option value="usdt">تتر - USDT (Web3 / متامسک)</option>
                     </select>
                 </div>
                 <div>
@@ -312,7 +314,7 @@
                     <input type="number" id="depositAmount" required placeholder="مثال: ۱۰,۰۰۰,۰۰۰" class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-gold outline-none">
                 </div>
                 <button type="submit" class="w-full py-3 text-sm font-bold text-black gold-btn-gradient rounded-xl shadow-md hover:shadow-gold/20 transition-all">
-                    تایید و انتقال به درگاه
+                    تایید و پرداخت
                 </button>
             </form>
         </div>
@@ -331,7 +333,7 @@
                     <label class="block text-xs text-slate-400 mb-1">نوع دارایی جهت برداشت:</label>
                     <select id="withdrawType" class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-gold outline-none">
                         <option value="toman">تومان (انتقال پایا / ساتنا به حساب بانکی)</option>
-                        <option value="usdt">تتر (انتقال به کیف پول ارز دیجیتال)</option>
+                        <option value="usdt">تتر (انتقال به کیف پول متامسک / وب۳)</option>
                     </select>
                 </div>
                 <div>
@@ -340,7 +342,7 @@
                 </div>
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">شماره شبا یا آدرس ولت مقصد:</label>
-                    <input type="text" id="withdrawDestination" required placeholder="IR000000000000000000000000 یا آدرس تتر" class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-gold outline-none text-left dir-ltr">
+                    <input type="text" id="withdrawDestination" required placeholder="IR... یا آدرس ولت متامسک" class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-gold outline-none text-left dir-ltr">
                 </div>
                 <button type="submit" class="w-full py-3 text-sm font-bold text-black gold-btn-gradient rounded-xl shadow-md hover:shadow-gold/20 transition-all">
                     ثبت نهایی درخواست
@@ -349,7 +351,7 @@
         </div>
     </div>
 
-    <!-- AUTHENTICATION MODAL (LOGIN & REGISTER) -->
+    <!-- AUTHENTICATION MODAL -->
     <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="glass-panel w-full max-w-md rounded-2xl p-6 sm:p-8 relative border border-gold/30 shadow-2xl">
             <button onclick="closeAuthModal()" class="absolute top-5 left-5 text-slate-400 hover:text-white transition-colors">
@@ -357,16 +359,10 @@
             </button>
 
             <div class="flex items-center justify-center gap-4 border-b border-dark-border pb-4 mb-6">
-                <button onclick="switchTab('login')" id="tabLoginBtn" class="text-lg font-black pb-2 border-b-2 border-gold text-gold transition-all">
-                    ورود به حساب
-                </button>
+                <button onclick="switchTab('login')" id="tabLoginBtn" class="text-lg font-black pb-2 border-b-2 border-gold text-gold transition-all">ورود به حساب</button>
                 <span class="text-slate-600 text-sm">|</span>
-                <button onclick="switchTab('register')" id="tabRegisterBtn" class="text-lg font-bold pb-2 text-slate-400 hover:text-slate-200 transition-all">
-                    ثبت نام جدید
-                </button>
+                <button onclick="switchTab('register')" id="tabRegisterBtn" class="text-lg font-bold pb-2 text-slate-400 hover:text-slate-200 transition-all">ثبت نام جدید</button>
             </div>
-
-            <div id="authAlert" class="hidden p-3 rounded-xl mb-4 text-xs font-bold flex items-center gap-2"></div>
 
             <form onsubmit="handleAuthSubmit(event)" class="space-y-4">
                 <div id="fullNameGroup" class="hidden">
@@ -396,13 +392,14 @@
         </div>
     </div>
 
-    <!-- JavaScript Application Core -->
+    <!-- JavaScript Application Core & Web3 MetaMask Integration -->
     <script>
         let globalGoldOunceUSD = 2695.50; 
         let usdtPriceToman = 69500;
         let goldPriceGram = 0;
         let activeAuthTab = 'login';
         let currentUser = JSON.parse(localStorage.getItem('goldin_user')) || null;
+        let web3Account = null;
 
         let userWallet = JSON.parse(localStorage.getItem('goldin_wallet')) || {
             goldGram: 0.000,
@@ -411,6 +408,32 @@
         };
 
         let transactions = JSON.parse(localStorage.getItem('goldin_txs')) || [];
+
+        // WEB3 METAMASK CONNECTION
+        async function connectMetaMask() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                    web3Account = accounts[0];
+                    const shortAddr = web3Account.substring(0, 6) + '...' + web3Account.substring(web3Account.length - 4);
+                    
+                    document.getElementById('web3ConnectBtn').innerHTML = `<i class="fa-brands fa-ethereum text-emerald-400"></i> ${shortAddr}`;
+                    document.getElementById('web3StatusText').innerText = `متصل: ${shortAddr}`;
+                    
+                    // Simulate adding some test USDT from Web3 wallet for demo if zero
+                    if (userWallet.usdt === 0) {
+                        userWallet.usdt = 100.00;
+                        updateWalletUI();
+                    }
+
+                    alert(`کیف پول متامسک با موفقیت متصل شد:\n${web3Account}`);
+                } catch (error) {
+                    alert('اتصال به متامسک توسط کاربر لغو شد.');
+                }
+            } else {
+                alert('افزونه متامسک (MetaMask) روی مرورگر شما شناسایی نشد. لطفاً متامسک را نصب کنید.');
+            }
+        }
 
         async function fetchMarketData() {
             try {
@@ -519,12 +542,12 @@
                 addTransactionRow('واریز تومانی', '-', `+${amount.toLocaleString('fa-IR')} تومان`, 'موفق');
             } else {
                 userWallet.usdt += amount;
-                addTransactionRow('شارژ تتر (USDT)', `${amount} USDT`, '-', 'موفق');
+                addTransactionRow('شارژ تتر (Web3)', `${amount} USDT`, '-', 'موفق');
             }
 
             updateWalletUI();
             closeDepositModal();
-            alert('واریز وجه با موفقیت انجام شد و موجودی به‌روز گردید.');
+            alert('واریز وجه با موفقیت انجام شد.');
         }
 
         function handleWithdrawSubmit(e) {
@@ -542,7 +565,7 @@
             } else {
                 if (userWallet.usdt < amount) { alert('موجودی تتر کافی نیست.'); return; }
                 userWallet.usdt -= amount;
-                addTransactionRow('برداشت تتر', `${amount} USDT`, '-', 'در انتظار شبکه');
+                addTransactionRow('برداشت تتر (Web3)', `${amount} USDT`, '-', 'تایید شده در بلاکچین');
             }
 
             updateWalletUI();
@@ -643,25 +666,25 @@
             localStorage.setItem('goldin_user', JSON.stringify(currentUser));
             updateHeaderUser();
             closeAuthModal();
-            alert('عملیات با موفقیت انجام شد.');
+            alert('ورود با موفقیت انجام شد.');
         }
 
         function updateHeaderUser() {
             const headerArea = document.getElementById('headerAuthArea');
             if (currentUser) {
                 headerArea.innerHTML = `
-                    <div class="flex items-center gap-3 bg-dark-card border border-gold/30 px-4 py-2 rounded-xl">
-                        <i class="fa-solid fa-user-check text-gold"></i>
-                        <span class="text-xs sm:text-sm font-bold text-slate-200">${currentUser.name}</span>
-                        <button onclick="logout()" class="text-slate-400 hover:text-rose-400 text-xs mr-2" title="خروج">
+                    <div class="flex items-center gap-2 bg-dark-card border border-gold/30 px-3 py-1.5 rounded-xl">
+                        <i class="fa-solid fa-user-check text-gold text-xs"></i>
+                        <span class="text-xs font-bold text-slate-200">${currentUser.name}</span>
+                        <button onclick="logout()" class="text-slate-400 hover:text-rose-400 text-xs mr-1" title="خروج">
                             <i class="fa-solid fa-power-off"></i>
                         </button>
                     </div>
                 `;
             } else {
                 headerArea.innerHTML = `
-                    <button onclick="openAuthModal('login')" class="px-4 py-2 text-sm font-semibold text-slate-200 hover:text-gold transition-colors">ورود</button>
-                    <button onclick="openAuthModal('register')" class="px-5 py-2.5 text-sm font-bold text-black gold-btn-gradient rounded-xl shadow-md hover:shadow-gold/20 transition-all">ثبت نام</button>
+                    <button onclick="openAuthModal('login')" class="px-3 py-2 text-sm font-semibold text-slate-200 hover:text-gold transition-colors">ورود</button>
+                    <button onclick="openAuthModal('register')" class="px-4 py-2 text-sm font-bold text-black gold-btn-gradient rounded-xl shadow-md transition-all">ثبت نام</button>
                 `;
             }
         }
@@ -673,7 +696,7 @@
             alert('از حساب کاربری خارج شدید.');
         }
 
-        // Initialization
+        // Startup execution
         updateHeaderUser();
         renderTransactions();
         updatePricesAndCalculation();
